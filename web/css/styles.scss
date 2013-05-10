@@ -1,0 +1,40 @@
+$base-font-size: 0.875em;
+$site-width: 960px;
+$main-font-family: helvetica, verdana, sans-serif;
+$title-font-family: georgia, "times new roman", serif;
+$background-color: #000066;
+$content-background-color: #fff;
+$font-color: #333;
+$link-color: #333;
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: $base-font-size;
+  font-family: $main-font-family;
+  background-color: $background-color;
+}
+
+a, a:visited {
+  text-decoration: $link-decoration;
+  outline: none;
+  img {
+    border: 0;
+  }
+}
+
+a:hover { text-decoration: $link-hover-decoration; }
+a:focus { outline: none; border: 0; }
+
+#container {
+  background-color: $content-background-color;
+  margin: 0 auto;
+  width: $site-width;
+  text-align: left;
+}
+
+h1,h2,h3,h4,h5 {
+  font-family: $title-font-family;
+}
