@@ -1,8 +1,8 @@
 <?php
 chdir(dirname(__FILE__));
+session_start();
 set_globals();
 $template_file = load_page();
-
 
 /**
  * Loads the page
@@ -40,7 +40,6 @@ function set_globals()
 {
   $uri = str_replace('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
   $GLOBALS['url_parts'] = array_values(array_filter(explode('/', $uri)));
-  $GLOBALS['translations'] = array();
   load_translations(); 
   set_language();
 }
@@ -51,13 +50,27 @@ function set_globals()
  */
 function load_translations()
 {
+  // Init as empty array if not set
+  if (!isset($_SESSION['translations']))
+  {
+    $_SESSION['translations'] = array();
+    $_SESSION['translations_last_loaded'] = 0;
+  }
+  
   $dirhandle = opendir('translations');
   while (($filename = readdir($dirhandle)) !== FALSE)
   {
     if (substr($filename, -4) == '.yml')
     {
-      $yaml = file_get_contents('translations/' . $filename);
-      $GLOBALS['translations'][substr($filename, 0, -4)] = yaml_parse($yaml);
+      $lang = substr($filename, 0, -4);
+      $translation_file_path = 'translations/' . $filename;
+      // If we haven't loaded the file or it has been modified more recently than it was loaded then load and store into session
+      if (!array_key_exists($lang, $_SESSION['translations']) || $_SESSION['translations_last_loaded'] < filemtime($translation_file_path))
+      {
+        $yaml = file_get_contents($translation_file_path);
+        $_SESSION['translations'][$lang] = yaml_parse($yaml);
+        $_SESSION['translations_last_loaded'] = time();
+      }
     }
   }
 }
@@ -70,7 +83,7 @@ function set_language()
 {
   if (count($GLOBALS['url_parts']))
   {
-    if (array_key_exists($GLOBALS['url_parts'][0], $GLOBALS['translations']))
+    if (array_key_exists($GLOBALS['url_parts'][0], $_SESSION['translations']))
     {
       $GLOBALS['lang'] = array_shift($GLOBALS['url_parts']);
       return;
@@ -87,8 +100,8 @@ function set_language()
  */
 function __($string)
 {
-  if (array_key_exists($GLOBALS['lang'], $GLOBALS['translations']) && array_key_exists($string, $GLOBALS['translations'][$GLOBALS['lang']]))
-    return $GLOBALS['translations'][$GLOBALS['lang']][$string];
+  if (array_key_exists($GLOBALS['lang'], $_SESSION['translations']) && array_key_exists($string, $_SESSION['translations'][$GLOBALS['lang']]))
+    return $_SESSION['translations'][$GLOBALS['lang']][$string];
   else
     return $string;
 }
