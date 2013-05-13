@@ -38,7 +38,8 @@ function load_page()
  */
 function set_globals()
 {
-  $GLOBALS['url_parts'] = array_values(array_filter(explode('/', $_SERVER['REQUEST_URI'])));
+  $uri = str_replace('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+  $GLOBALS['url_parts'] = array_values(array_filter(explode('/', $uri)));
   $GLOBALS['translations'] = array();
   load_translations(); 
   set_language();
