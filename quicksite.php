@@ -1,8 +1,15 @@
 <?php
+ini_set('display_errors', 0);
+error_reporting(E_ALL ^ E_NOTICE);
 chdir(dirname(__FILE__));
 session_start();
 set_globals();
 $template_file = load_page();
+if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') 
+{
+  include($template_file);
+  die();
+}
 
 /**
  * Loads the page
@@ -14,11 +21,13 @@ function load_page()
   {
     foreach ($GLOBALS['url_parts'] as $key => $part)
     {
-      if ($key+1 == count($url_parts))
+      if ($key+1 == count($GLOBALS['url_parts']))
       {
         $file = $path . $part . '.php';
         if (file_exists($file))
+        {
           return $file;
+        }
       }
       else 
         $path .= $part . '/';
