@@ -13,7 +13,7 @@ This tool is _not_ intended for complex websites, but rather non-database driven
 - Intelligble template folder structure linked directly to URL paths (e.g. /page/test sits in /templates/page/test.php)
 - Simple internationalisation with YAML based translation file(s) and URL path prefixes (e.g. /fr/page/test)
 - Pre-configured SASS .scss file with variables defined for common layout customisation
-- jQuery 1.9.1 and an application.js file containing common javascript functions
+- jQuery 1.9.1 and an application.js file containing common javascript functions and legacy browser HTML5 DOM element support
 - [CSS3 PIE](http://css3pie.com) for legacy browser support
 
 Requirements

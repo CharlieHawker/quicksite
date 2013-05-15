@@ -9,6 +9,8 @@ $link-color: #333;
 $link-decoration: none;
 $link-hover-decoration: underline;
 
+article,section,nav,aside,header,footer,page,main,figure,figcaption { display: block; }
+
 body {
   margin: 0;
   padding: 0;
